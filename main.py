@@ -94,6 +94,63 @@ def view_speakers_sessions():
     except Exception as e:
         print("Error:", e)
 
+# option 2: view attendees by company
+def view_attendees_by_company():
+    try:
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="appdbproj"
+        )
+
+        cursor = connection.cursor()
+
+        while True:
+            company_id = input("Enter Company ID: ")
+
+            if not company_id.isdigit() or int(company_id) <= 0:
+                print("Invalid company ID. Please enter a number greater than 0.")
+            else:
+                break
+
+        # Check if company exists
+        cursor.execute("SELECT companyName FROM company WHERE companyID = %s", (company_id,))
+        company = cursor.fetchone()
+
+        if not company:
+            print("Company does not exist.")
+            return
+
+        print(f"\nCompany: {company[0]}")
+
+        # Main query
+        query = """
+        SELECT a.attendeeName, a.attendeeDOB, s.sessionTitle, s.speakerName, r.roomName
+        FROM attendee a
+        JOIN registration reg ON a.attendeeID = reg.attendeeID
+        JOIN session s ON reg.sessionID = s.sessionID
+        JOIN room r ON s.roomID = r.roomID
+        WHERE a.attendeeCompanyID = %s
+        """
+
+        cursor.execute(query, (company_id,))
+        results = cursor.fetchall()
+
+        if results:
+            print("\nAttendees:")
+            print("-----------------------------------------------------")
+            for row in results:
+                print(f"Name: {row[0]} | DOB: {row[1]} | Session: {row[2]} | Speaker: {row[3]} | Room: {row[4]}")
+        else:
+            print("No attendees found for this company.")
+
+        cursor.close()
+        connection.close()
+
+    except Exception as e:
+        print("Error:", e)
+
 # main menu display
 def main_menu():
     while True:
@@ -112,7 +169,7 @@ def main_menu():
         if choice == "1":
             view_speakers_sessions()
         elif choice == "2":
-            print("Option 2 selected")
+            view_attendees_by_company()
         elif choice == "3":
             print("Option 3 selected")
         elif choice == "4":
