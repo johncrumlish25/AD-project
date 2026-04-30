@@ -1,3 +1,25 @@
+import mysql.connector
+
+# test connection to MySQL database
+def test_connection():
+    try:
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="appdbproj"
+        )
+
+        if connection.is_connected():
+            print("Connected to MySQL")
+
+        connection.close()
+
+    # print any errors
+    except Exception as e:
+        print("Error:", e)
+
+# main menu display
 def main_menu():
     while True:
         print("\nConference Management")
@@ -24,8 +46,9 @@ def main_menu():
             print("Option 5 selected")
         elif choice == "6":
             print("Option 6 selected")
+            test_connection()
         elif choice.lower() == "x":
-            print("Exiting Application...")
+            print("Exiting application...")
             break
         else:
             print("Invalid choice, please try again.")
