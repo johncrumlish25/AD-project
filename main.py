@@ -19,6 +19,7 @@ def test_connection():
     except Exception as e:
         print("Error:", e)
 
+# option 6: rooms
 def view_rooms():
     try:
         # Connect to database
@@ -53,6 +54,46 @@ def view_rooms():
     except Exception as e:
         print("Error:", e)
 
+# option 1: speakers & sessions
+def view_speakers_sessions():
+    try:
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="appdbproj"
+        )
+
+        cursor = connection.cursor()
+
+        # Get user input
+        search = input("Enter speaker name: ")
+
+        # SQL query with JOINs
+        query = """
+        SELECT se.speakerName, se.sessionTitle, r.roomName
+        FROM session se
+        JOIN room r ON se.roomID = r.roomID
+        WHERE se.speakerName LIKE %s
+        """
+
+        cursor.execute(query, ("%" + search + "%",))
+        results = cursor.fetchall()
+
+        if results:
+            print("\nResults:")
+            print("-----------------------------")
+            for row in results:
+                print(f"Speaker: {row[0]} | Session: {row[1]} | Room: {row[2]}")
+        else:
+            print("No speakers match search.")
+
+        cursor.close()
+        connection.close()
+
+    except Exception as e:
+        print("Error:", e)
+
 # main menu display
 def main_menu():
     while True:
@@ -69,7 +110,7 @@ def main_menu():
         choice = input("Choice: ")
 
         if choice == "1":
-            print("Option 1 selected")
+            view_speakers_sessions()
         elif choice == "2":
             print("Option 2 selected")
         elif choice == "3":
