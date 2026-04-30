@@ -19,6 +19,40 @@ def test_connection():
     except Exception as e:
         print("Error:", e)
 
+def view_rooms():
+    try:
+        # Connect to database
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="appdbproj"
+        )
+
+        cursor = connection.cursor()
+
+        # get all rooms
+        query = "SELECT roomID, roomName, capacity FROM room"
+        cursor.execute(query)
+
+        results = cursor.fetchall()
+
+        # Check if any rooms exist
+        if results:
+            print("\nRooms:")
+            print("-----------------------------")
+            for row in results:
+                print(f"ID: {row[0]} | Name: {row[1]} | Capacity: {row[2]}")
+        else:
+            print("No rooms found.")
+
+        # Close connection
+        cursor.close()
+        connection.close()
+
+    except Exception as e:
+        print("Error:", e)
+
 # main menu display
 def main_menu():
     while True:
@@ -45,7 +79,7 @@ def main_menu():
         elif choice == "5":
             print("Option 5 selected")
         elif choice == "6":
-            print("Option 6 selected")
+            view_rooms()
             test_connection()
         elif choice.lower() == "x":
             print("Exiting application...")
