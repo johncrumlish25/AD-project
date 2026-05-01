@@ -240,7 +240,6 @@ def main_menu():
         print("4 - View Connected Attendees")
         print("5 - Add Attendee Connection")
         print("6 - View Rooms")
-        print("7 - Test Neo4j Connection")
         print("x - Exit")
 
         choice = input("Choice: ")
@@ -258,8 +257,6 @@ def main_menu():
         elif choice == "6":
             view_rooms()
             test_connection()
-        elif choice == "7":
-            test_neo4j_connection()
         elif choice.lower() == "x":
             print("Exiting application...")
             break
