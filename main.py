@@ -116,6 +116,59 @@ def view_attendees_by_company():
     except Exception as e:
         print("Error:", e)
 
+# option 3: add new attendee
+def add_new_attendee():
+    try:
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="appdbproj"
+        )
+
+        cursor = connection.cursor()
+
+        # get user input
+        attendee_id = int(input("Enter Attendee ID: "))
+        name = input("Enter Name: ")
+        dob = input("Enter DOB (YYYY-MM-DD): ")
+        gender = input("Enter Gender (M/F): ")
+        company_id = input("Enter Company ID: ")
+
+        # check if ID already exists
+        cursor.execute("SELECT * FROM attendee WHERE attendeeID = %s", (attendee_id,))
+        if cursor.fetchone():
+            print("Attendee ID already exists.")
+            return
+
+        # validate gender
+        if gender not in ["M", "F"]:
+            print("Invalid gender. Use M or F.")
+            return
+
+        # check if company exists
+        cursor.execute("SELECT * FROM company WHERE companyID = %s", (company_id,))
+        if not cursor.fetchone():
+            print("Company ID does not exist.")
+            return
+
+        # insert attendee
+        query = """
+        INSERT INTO attendee (attendeeID, attendeeName, attendeeDOB, attendeeGender, attendeeCompanyID)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+
+        cursor.execute(query, (attendee_id, name, dob, gender, company_id))
+        connection.commit()
+
+        print("Attendee successfully added.")
+
+        cursor.close()
+        connection.close()
+
+    except Exception as e:
+        print("Error:", e)
+
 # option 6: rooms
 def view_rooms():
     try:
@@ -171,7 +224,7 @@ def main_menu():
         elif choice == "2":
             view_attendees_by_company()
         elif choice == "3":
-            print("Option 3 selected")
+            add_new_attendee()
         elif choice == "4":
             print("Option 4 selected")
         elif choice == "5":
