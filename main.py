@@ -170,6 +170,63 @@ def add_new_attendee():
     except Exception as e:
         print("Error:", e)
 
+# option 4: view connected attendees
+def view_connected_attendees():
+    try:
+        # neo4j connection details
+        uri = "bolt://localhost:7687"
+        username = "neo4j"
+        password = "root1234"
+
+        # create driver to connect to Neo4j
+        driver = GraphDatabase.driver(uri, auth=(username, password))
+
+        # user input
+        while True:
+            attendee_id = input("Enter Attendee ID: ")
+            if not attendee_id.isdigit():
+                print("Invalid input. Please enter a numeric ID.")
+            else:
+                attendee_id = int(attendee_id)
+                break
+
+        with driver.session() as session:
+
+            # check if attendee exists
+            check_query = """
+            MATCH (a:Attendee {AttendeeID: $id})
+            RETURN a
+            """
+            result = session.run(check_query, id=attendee_id)
+
+            if not result.single():
+                print("Attendee not found.")
+                driver.close()
+                return
+
+            # query to find connected attendees
+            query = """
+            MATCH (a:Attendee {AttendeeID: $id})-[:CONNECTED_TO]->(b:Attendee)
+            RETURN b.AttendeeID AS connectedID
+            """
+            results = session.run(query, id=attendee_id)
+
+            connections = [record["connectedID"] for record in results]
+
+            # display results
+            if connections:
+                print("\nConnected Attendees:")
+                print("----------------------")
+                for conn in connections:
+                    print(f"Attendee ID: {conn}")
+            else:
+                print("No connections found for this attendee.")
+
+        driver.close()
+
+    except Exception as e:
+        print("Error:", e)
+
 # option 6: rooms
 def view_rooms():
     try:
@@ -251,7 +308,7 @@ def main_menu():
         elif choice == "3":
             add_new_attendee()
         elif choice == "4":
-            print("Option 4 selected")
+            view_connected_attendees()
         elif choice == "5":
             print("Option 5 selected")
         elif choice == "6":
