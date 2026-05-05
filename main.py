@@ -366,7 +366,6 @@ def main_menu():
             add_attendee_connection()
         elif choice == "6":
             view_rooms()
-            test_connection()
         elif choice.lower() == "x":
             print("Exiting application...")
             break
