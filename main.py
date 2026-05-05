@@ -227,6 +227,59 @@ def view_connected_attendees():
     except Exception as e:
         print("Error:", e)
 
+# option 5: add attendee connection
+def add_attendee_connection():
+    try:
+        # Neo4j connection details
+        uri = "bolt://localhost:7687"
+        username = "neo4j"
+        password = "root1234"
+
+        driver = GraphDatabase.driver(uri, auth=(username, password))
+
+        # Input validation
+        while True:
+            id1 = input("Enter first Attendee ID: ")
+            id2 = input("Enter second Attendee ID: ")
+
+            if not id1.isdigit() or not id2.isdigit():
+                print("Invalid input. Please enter numeric IDs.")
+            else:
+                id1 = int(id1)
+                id2 = int(id2)
+                break
+
+        with driver.session() as session:
+
+            # Check both attendees exist
+            check_query = """
+            MATCH (a:Attendee)
+            WHERE a.AttendeeID = $id1 OR a.AttendeeID = $id2
+            RETURN a.AttendeeID AS id
+            """
+            result = session.run(check_query, id1=id1, id2=id2)
+
+            found_ids = [record["id"] for record in result]
+
+            if id1 not in found_ids or id2 not in found_ids:
+                print("One or both attendees do not exist.")
+                driver.close()
+                return
+
+            # Create connection (avoids duplicates)
+            query = """
+            MATCH (a:Attendee {AttendeeID: $id1}), (b:Attendee {AttendeeID: $id2})
+            MERGE (a)-[:CONNECTED_TO]->(b)
+            """
+            session.run(query, id1=id1, id2=id2)
+
+            print("Connection successfully added.")
+
+        driver.close()
+
+    except Exception as e:
+        print("Error:", e)
+
 # option 6: rooms
 def view_rooms():
     try:
@@ -310,7 +363,7 @@ def main_menu():
         elif choice == "4":
             view_connected_attendees()
         elif choice == "5":
-            print("Option 5 selected")
+            add_attendee_connection()
         elif choice == "6":
             view_rooms()
             test_connection()
