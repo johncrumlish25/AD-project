@@ -114,8 +114,16 @@ def view_attendees_by_company():
         if results:
             print("\nAttendees:")
             print("-----------------------------------------------------")
+
             for row in results:
-                print(f"Name: {row[0]} | DOB: {row[1]} | Session: {row[2]} | Speaker: {row[3]} | Room: {row[4]}")
+                print("----------------------------------------")
+                print(f"Name: {row[0]}")
+                print(f"DOB: {row[1]}")
+                print(f"Session: {row[2]}")
+                print(f"Speaker: {row[3]}")
+                print(f"Room: {row[4]}")
+                print("----------------------------------------")
+                
         else:
             print("No attendees found for this company.")
 
