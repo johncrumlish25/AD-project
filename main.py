@@ -33,10 +33,9 @@ def view_speakers_sessions():
 
         if results:
             print("\nResults:")
-            print("-----------------------------")
+            print("----------------------------------------")
 
             for row in results:
-                print("\n----------------------------------------")
                 print(f"Speaker: {row[0]}")
                 print(f"Session: {row[1]}")
                 print(f"Room: {row[2]}")
