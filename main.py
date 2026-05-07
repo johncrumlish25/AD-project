@@ -321,11 +321,10 @@ def view_rooms():
             print("-----------------------------")
 
             for row in results:
-                print("\n----------------------------------------")
                 print(f"Room ID: {row[0]}")
                 print(f"Room Name: {row[1]}")
                 print(f"Capacity: {row[2]}")
-                print("----------------------------------------")
+                print("-----------------------------")
 
         else:
             print("No rooms found.")
