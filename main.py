@@ -57,8 +57,14 @@ def view_speakers_sessions():
         if results:
             print("\nResults:")
             print("-----------------------------")
+            
             for row in results:
-                print(f"Speaker: {row[0]} | Session: {row[1]} | Room: {row[2]}")
+                print("\n----------------------------------------")
+                print(f"Speaker: {row[0]}")
+                print(f"Session: {row[1]}")
+                print(f"Room: {row[2]}")
+                print("----------------------------------------")
+
         else:
             print("No speakers match search.")
 
@@ -123,7 +129,7 @@ def view_attendees_by_company():
                 print(f"Speaker: {row[3]}")
                 print(f"Room: {row[4]}")
                 print("----------------------------------------")
-                
+
         else:
             print("No attendees found for this company.")
 
