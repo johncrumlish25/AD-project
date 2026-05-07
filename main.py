@@ -1,6 +1,10 @@
 import mysql.connector
 from neo4j import GraphDatabase
 
+# ========================
+# MySQL Functions
+# ========================
+
 # test connection to MySQL database
 def test_connection():
     try:
@@ -19,6 +23,10 @@ def test_connection():
     # print any errors
     except Exception as e:
         print("Error:", e)
+
+# ========================
+# Neo4j Functions
+# ========================
 
 # option 1: speakers & sessions
 def view_speakers_sessions():
@@ -338,6 +346,10 @@ def test_neo4j_connection():
 
     except Exception as e:
         print("Error:", e)
+
+# ========================
+# Main Menu
+# ========================
 
 # main menu display
 def main_menu():
