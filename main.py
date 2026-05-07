@@ -5,24 +5,6 @@ from neo4j import GraphDatabase
 # MySQL Functions
 # ========================
 
-# test connection to MySQL database
-def test_connection():
-    try:
-        connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="appdbproj"
-        )
-
-        if connection.is_connected():
-            print("Connected to MySQL")
-
-        connection.close()
-
-    # print any errors
-    except Exception as e:
-        print("Error:", e)
 
 # ========================
 # Neo4j Functions
