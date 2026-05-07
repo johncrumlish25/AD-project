@@ -57,7 +57,7 @@ def view_speakers_sessions():
         if results:
             print("\nResults:")
             print("-----------------------------")
-            
+
             for row in results:
                 print("\n----------------------------------------")
                 print(f"Speaker: {row[0]}")
@@ -239,8 +239,12 @@ def view_connected_attendees():
             if connections:
                 print("\nConnected Attendees:")
                 print("----------------------")
+
                 for conn in connections:
-                    print(f"Attendee ID: {conn}")
+                    print("\n----------------------------------------")
+                    print(f"Connected Attendee ID: {conn}")
+                    print("----------------------------------------")
+
             else:
                 print("No connections found for this attendee.")
 
