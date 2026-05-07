@@ -336,37 +336,13 @@ def view_rooms():
                 print(f"Room Name: {row[1]}")
                 print(f"Capacity: {row[2]}")
                 print("----------------------------------------")
-                
+
         else:
             print("No rooms found.")
 
         # Close connection
         cursor.close()
         connection.close()
-
-    except Exception as e:
-        print("Error:", e)
-
-# Function to test connection to Neo4j database
-def test_neo4j_connection():
-    try:
-        # Connection details for Neo4j
-        uri = "bolt://localhost:7687"
-        username = "neo4j"
-        password = "root1234" 
-
-        # Create a driver instance to connect to Neo4j
-        driver = GraphDatabase.driver(uri, auth=(username, password))
-
-        # Open a session to run Cypher queries
-        with driver.session() as session:
-            result = session.run("RETURN 'Connected to Neo4j!' AS message")
-
-            # Print the result from the query
-            for record in result:
-                print(record["message"])
-
-        driver.close()
 
     except Exception as e:
         print("Error:", e)
