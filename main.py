@@ -351,6 +351,8 @@ def main_menu():
     while True:
         print("\nConference Management")
         print("----------------------")
+        print("\nMENU")
+        print("====")
         print("1 - View Speakers & Sessions")
         print("2 - View Attendees by Company")
         print("3 - Add New Attendee")
