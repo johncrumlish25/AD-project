@@ -2,12 +2,7 @@ import mysql.connector
 from neo4j import GraphDatabase
 
 # ========================
-# MySQL Functions
-# ========================
-
-
-# ========================
-# Neo4j Functions
+# Functions
 # ========================
 
 # option 1: speakers & sessions
