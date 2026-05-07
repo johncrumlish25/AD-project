@@ -98,10 +98,9 @@ def view_attendees_by_company():
 
         if results:
             print("\nAttendees:")
-            print("-----------------------------------------------------")
+            print("----------------------------------------")
 
             for row in results:
-                print("----------------------------------------")
                 print(f"Name: {row[0]}")
                 print(f"DOB: {row[1]}")
                 print(f"Session: {row[2]}")
