@@ -224,12 +224,11 @@ def view_connected_attendees():
             # display results
             if connections:
                 print("\nConnected Attendees:")
-                print("----------------------")
+                print("----------------------------")
 
                 for conn in connections:
-                    print("\n----------------------------------------")
                     print(f"Connected Attendee ID: {conn}")
-                    print("----------------------------------------")
+                    print("----------------------------")
 
             else:
                 print("No connections found for this attendee.")
