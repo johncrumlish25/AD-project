@@ -48,6 +48,8 @@ def view_speakers_sessions():
         cursor.close()
         connection.close()
 
+        input("\nPress Enter to return to menu...")
+
     except Exception as e:
         print("Error:", e)
 
@@ -77,6 +79,7 @@ def view_attendees_by_company():
 
         if not company:
             print("Company does not exist.")
+            input("\nPress Enter to return to menu...")
             return
 
         print(f"\nCompany: {company[0]}")
@@ -113,6 +116,8 @@ def view_attendees_by_company():
         cursor.close()
         connection.close()
 
+        input("\nPress Enter to return to menu...")
+
     except Exception as e:
         print("Error:", e)
 
@@ -139,17 +144,20 @@ def add_new_attendee():
         cursor.execute("SELECT * FROM attendee WHERE attendeeID = %s", (attendee_id,))
         if cursor.fetchone():
             print("Attendee ID already exists.")
+            input("\nPress Enter to return to menu...")
             return
 
         # validate gender
         if gender not in ["M", "F"]:
             print("Invalid gender. Use M or F.")
+            input("\nPress Enter to return to menu...")
             return
 
         # check if company exists
         cursor.execute("SELECT * FROM company WHERE companyID = %s", (company_id,))
         if not cursor.fetchone():
             print("Company ID does not exist.")
+            input("\nPress Enter to return to menu...")
             return
 
         # insert attendee
@@ -162,6 +170,8 @@ def add_new_attendee():
         connection.commit()
 
         print("Attendee successfully added.")
+
+        input("\nPress Enter to return to menu...")
 
         cursor.close()
         connection.close()
@@ -200,6 +210,7 @@ def view_connected_attendees():
 
             if not result.single():
                 print("Attendee not found.")
+                input("\nPress Enter to return to menu...")
                 driver.close()
                 return
 
@@ -224,6 +235,8 @@ def view_connected_attendees():
 
             else:
                 print("No connections found for this attendee.")
+
+        input("\nPress Enter to return to menu...")
 
         driver.close()
 
@@ -266,6 +279,7 @@ def add_attendee_connection():
 
             if id1 not in found_ids or id2 not in found_ids:
                 print("One or both attendees do not exist.")
+                input("\nPress Enter to return to menu...")
                 driver.close()
                 return
 
@@ -278,12 +292,14 @@ def add_attendee_connection():
 
             print("Connection successfully added.")
 
+        input("\nPress Enter to return to menu...")
+
         driver.close()
 
     except Exception as e:
         print("Error:", e)
 
-# option 6: rooms
+# option 6: view rooms
 def view_rooms():
     try:
         # Connect to database
@@ -320,6 +336,8 @@ def view_rooms():
         # Close connection
         cursor.close()
         connection.close()
+
+        input("\nPress Enter to return to menu...")
 
     except Exception as e:
         print("Error:", e)
