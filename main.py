@@ -1,5 +1,22 @@
 import mysql.connector
 from neo4j import GraphDatabase
+import config
+
+# MySQL Connection
+conn = mysql.connector.connect(
+    host=config.MYSQL_HOST,
+    user=config.MYSQL_USER,
+    password=config.MYSQL_PASSWORD,
+    database=config.MYSQL_DATABASE
+)
+
+cursor = conn.cursor()
+
+# Neo4j Connection
+driver = GraphDatabase.driver(
+    config.NEO4J_URI,
+    auth=(config.NEO4J_USER, config.NEO4J_PASSWORD)
+)
 
 # ========================
 # Functions
