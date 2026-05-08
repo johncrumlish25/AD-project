@@ -165,49 +165,70 @@ def add_new_attendee():
 def view_connected_attendees():
     try:
 
-        # user input
+        # validate input
         while True:
             attendee_id = input("Enter Attendee ID: ")
+
             if not attendee_id.isdigit():
                 print("Invalid input. Please enter a numeric ID.")
             else:
                 attendee_id = int(attendee_id)
                 break
 
+        # check MySQL
+        mysql_query = """
+        SELECT attendeeName
+        FROM attendee
+        WHERE attendeeID = %s
+        """
+
+        cursor.execute(mysql_query, (attendee_id,))
+        mysql_result = cursor.fetchone()
+
+        # attendee does not exist anywhere
+        if not mysql_result:
+            print("Attendee does not exist.")
+            input("\nPress Enter to return to menu...")
+            return
+
+        attendee_name = mysql_result[0]
+
         with driver.session() as session:
 
-            # check if attendee exists
-            check_query = """
-            MATCH (a:Attendee {AttendeeID: $id})
-            RETURN a
-            """
-            result = session.run(check_query, id=attendee_id)
-
-            if not result.single():
-                print("Attendee not found.")
-                input("\nPress Enter to return to menu...")
-                return
-
-            # query to find connected attendees
-            query = """
-            MATCH (a:Attendee {AttendeeID: $id})-[:CONNECTED_TO]->(b:Attendee)
+            # check Neo4j connections in both directions
+            neo4j_query = """
+            MATCH (a:Attendee {AttendeeID: $id})-[:CONNECTED_TO]-(b:Attendee)
             RETURN b.AttendeeID AS connectedID
             """
-            results = session.run(query, id=attendee_id)
+
+            results = session.run(neo4j_query, id=attendee_id)
 
             connections = [record["connectedID"] for record in results]
 
-            # display results
-            if connections:
+            print(f"\nAttendee: {attendee_name}")
+
+            # if no Neo4j connections
+            if not connections:
+                print("No connections")
+
+            else:
                 print("\nConnected Attendees:")
                 print("----------------------------")
 
-                for conn in connections:
-                    print(f"Connected Attendee ID: {conn}")
-                    print("----------------------------")
+                for connected_id in connections:
 
-            else:
-                print("No connections found for this attendee.")
+                    # get attendee name from MySQL
+                    cursor.execute(
+                        "SELECT attendeeName FROM attendee WHERE attendeeID = %s",
+                        (connected_id,)
+                    )
+
+                    connected_name = cursor.fetchone()
+
+                    if connected_name:
+                        print(f"ID: {connected_id}")
+                        print(f"Name: {connected_name[0]}")
+                        print("----------------------------")
 
         input("\nPress Enter to return to menu...")
 
