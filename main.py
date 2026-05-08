@@ -239,41 +239,75 @@ def view_connected_attendees():
 def add_attendee_connection():
     try:
 
-        # Input validation
+        # validate input
         while True:
             id1 = input("Enter first Attendee ID: ")
             id2 = input("Enter second Attendee ID: ")
 
             if not id1.isdigit() or not id2.isdigit():
                 print("Invalid input. Please enter numeric IDs.")
+
+            elif id1 == id2:
+                print("An attendee cannot connect to themselves.")
+
             else:
                 id1 = int(id1)
                 id2 = int(id2)
                 break
 
+        # check attendee 1 exists in MySQL
+        cursor.execute(
+            "SELECT * FROM attendee WHERE attendeeID = %s",
+            (id1,)
+        )
+
+        if not cursor.fetchone():
+            print("First attendee does not exist.")
+            input("\nPress Enter to return to menu...")
+            return
+
+        # check attendee 2 exists in MySQL
+        cursor.execute(
+            "SELECT * FROM attendee WHERE attendeeID = %s",
+            (id2,)
+        )
+
+        if not cursor.fetchone():
+            print("Second attendee does not exist.")
+            input("\nPress Enter to return to menu...")
+            return
+
         with driver.session() as session:
 
-            # Check both attendees exist
+            # check if already connected
             check_query = """
-            MATCH (a:Attendee)
-            WHERE a.AttendeeID = $id1 OR a.AttendeeID = $id2
-            RETURN a.AttendeeID AS id
+            MATCH (a:Attendee {AttendeeID: $id1})-[:CONNECTED_TO]-(b:Attendee {AttendeeID: $id2})
+            RETURN a
             """
+
             result = session.run(check_query, id1=id1, id2=id2)
 
-            found_ids = [record["id"] for record in result]
-
-            if id1 not in found_ids or id2 not in found_ids:
-                print("One or both attendees do not exist.")
+            if result.single():
+                print("These attendees are already connected.")
                 input("\nPress Enter to return to menu...")
                 return
 
-            # Create connection (avoids duplicates)
-            query = """
-            MATCH (a:Attendee {AttendeeID: $id1}), (b:Attendee {AttendeeID: $id2})
-            MERGE (a)-[:CONNECTED_TO]->(b)
+            # create nodes if they don't exist
+            create_nodes = """
+            MERGE (a:Attendee {AttendeeID: $id1})
+            MERGE (b:Attendee {AttendeeID: $id2})
             """
-            session.run(query, id1=id1, id2=id2)
+
+            session.run(create_nodes, id1=id1, id2=id2)
+
+            # create connection
+            create_connection = """
+            MATCH (a:Attendee {AttendeeID: $id1}),
+                  (b:Attendee {AttendeeID: $id2})
+            CREATE (a)-[:CONNECTED_TO]->(b)
+            """
+
+            session.run(create_connection, id1=id1, id2=id2)
 
             print("Connection successfully added.")
 
