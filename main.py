@@ -25,14 +25,6 @@ driver = GraphDatabase.driver(
 # option 1: speakers & sessions
 def view_speakers_sessions():
     try:
-        connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="appdbproj"
-        )
-
-        cursor = connection.cursor()
 
         # Get user input
         search = input("Enter speaker name: ")
@@ -61,9 +53,6 @@ def view_speakers_sessions():
         else:
             print("No speakers match search.")
 
-        cursor.close()
-        connection.close()
-
         input("\nPress Enter to return to menu...")
 
     except Exception as e:
@@ -72,14 +61,6 @@ def view_speakers_sessions():
 # option 2: view attendees by company
 def view_attendees_by_company():
     try:
-        connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="appdbproj"
-        )
-
-        cursor = connection.cursor()
 
         while True:
             company_id = input("Enter Company ID: ")
@@ -128,9 +109,6 @@ def view_attendees_by_company():
         else:
             print("No attendees found for this company.")
 
-        cursor.close()
-        connection.close()
-
         input("\nPress Enter to return to menu...")
 
     except Exception as e:
@@ -139,14 +117,6 @@ def view_attendees_by_company():
 # option 3: add new attendee
 def add_new_attendee():
     try:
-        connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="appdbproj"
-        )
-
-        cursor = connection.cursor()
 
         # get user input
         attendee_id = int(input("Enter Attendee ID: "))
@@ -182,14 +152,11 @@ def add_new_attendee():
         """
 
         cursor.execute(query, (attendee_id, name, dob, gender, company_id))
-        connection.commit()
+        conn.commit()
 
         print("Attendee successfully added.")
 
         input("\nPress Enter to return to menu...")
-
-        cursor.close()
-        connection.close()
 
     except Exception as e:
         print("Error:", e)
@@ -197,13 +164,6 @@ def add_new_attendee():
 # option 4: view connected attendees
 def view_connected_attendees():
     try:
-        # neo4j connection details
-        uri = "bolt://localhost:7687"
-        username = "neo4j"
-        password = "root1234"
-
-        # create driver to connect to Neo4j
-        driver = GraphDatabase.driver(uri, auth=(username, password))
 
         # user input
         while True:
@@ -226,7 +186,6 @@ def view_connected_attendees():
             if not result.single():
                 print("Attendee not found.")
                 input("\nPress Enter to return to menu...")
-                driver.close()
                 return
 
             # query to find connected attendees
@@ -252,20 +211,12 @@ def view_connected_attendees():
 
         input("\nPress Enter to return to menu...")
 
-        driver.close()
-
     except Exception as e:
         print("Error:", e)
 
 # option 5: add attendee connection
 def add_attendee_connection():
     try:
-        # Neo4j connection details
-        uri = "bolt://localhost:7687"
-        username = "neo4j"
-        password = "root1234"
-
-        driver = GraphDatabase.driver(uri, auth=(username, password))
 
         # Input validation
         while True:
@@ -294,7 +245,6 @@ def add_attendee_connection():
             if id1 not in found_ids or id2 not in found_ids:
                 print("One or both attendees do not exist.")
                 input("\nPress Enter to return to menu...")
-                driver.close()
                 return
 
             # Create connection (avoids duplicates)
@@ -308,23 +258,12 @@ def add_attendee_connection():
 
         input("\nPress Enter to return to menu...")
 
-        driver.close()
-
     except Exception as e:
         print("Error:", e)
 
 # option 6: view rooms
 def view_rooms():
     try:
-        # Connect to database
-        connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="appdbproj"
-        )
-
-        cursor = connection.cursor()
 
         # get all rooms
         query = "SELECT roomID, roomName, capacity FROM room"
@@ -345,10 +284,6 @@ def view_rooms():
 
         else:
             print("No rooms found.")
-
-        # Close connection
-        cursor.close()
-        connection.close()
 
         input("\nPress Enter to return to menu...")
 
@@ -390,7 +325,12 @@ def main_menu():
             view_rooms()
         elif choice.lower() == "x":
             print("Exiting application...")
+
+            cursor.close()
+            conn.close()
+            driver.close()
             break
+    
         else:
             print("Invalid choice, please try again.")
 
