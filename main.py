@@ -18,6 +18,9 @@ driver = GraphDatabase.driver(
     auth=(config.NEO4J_USER, config.NEO4J_PASSWORD)
 )
 
+# cache for rooms
+rooms_cache = None
+
 # ========================
 # Functions
 # ========================
@@ -318,20 +321,24 @@ def add_attendee_connection():
 
 # option 6: view rooms
 def view_rooms():
+    global rooms_cache
+
     try:
 
-        # get all rooms
-        query = "SELECT roomID, roomName, capacity FROM room"
-        cursor.execute(query)
+        # only load rooms once
+        if rooms_cache is None:
 
-        results = cursor.fetchall()
+            query = "SELECT roomID, roomName, capacity FROM room"
+            cursor.execute(query)
 
-        # Check if any rooms exist
-        if results:
+            rooms_cache = cursor.fetchall()
+
+        # display cached rooms
+        if rooms_cache:
             print("\nRooms:")
             print("-----------------------------")
 
-            for row in results:
+            for row in rooms_cache:
                 print(f"Room ID: {row[0]}")
                 print(f"Room Name: {row[1]}")
                 print(f"Capacity: {row[2]}")
