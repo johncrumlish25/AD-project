@@ -6,6 +6,18 @@ It demonstrates the use of both relational and graph databases.
 
 The application allows users to manage and explore data from a conference system, including attendees, sessions, rooms, and connections between attendees.
 
+The application is a Python-based conference management system that uses both:
+- MySQL
+- Neo4j
+
+The system allows users to:
+- View speakers and sessions
+- View attendees by company
+- Add new attendees
+- View attendee connections
+- Add attendee connections
+- View conference rooms
+
 ## Technologies Used
 - Python
 - MySQL (via WAMP)
@@ -13,7 +25,8 @@ The application allows users to manage and explore data from a conference system
 - MySQL Connector (Python library)
 - Neo4j Python Driver
 
----
+## Configuration
+Database credentials are stored in a separate configuration file called `config.py`
 
 ## Features Implemented
 
@@ -33,11 +46,20 @@ The application allows users to manage and explore data from a conference system
   - Valid gender
   - Existing company
 
-### 4. View Connected Attendees
-- Displays connections between attendees
+### Option 4 – View Connected Attendees
+- Uses Neo4j to display attendee connections
+- Handles:
+  - Invalid attendee IDs
+  - Attendees with no connections
+  - Connections in either direction
 
-### 5. Add Attendee Connection
-- Creates relationships between attendees
+### Option 5 – Add Attendee Connection
+- Creates CONNECTED_TO relationships between attendees
+- Includes validation for:
+  - Duplicate connections
+  - Invalid attendees
+  - Self-connections
 
-### 6. View Rooms
-- Displays all rooms with capacity
+### Option 6 – View Rooms
+- Displays room details
+- Uses room caching to match project specification requirements
