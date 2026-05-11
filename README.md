@@ -70,7 +70,9 @@ Required Python packages are listed in `requirements.txt`.
 
 Install all dependencies using:
 
+```bash
 pip install -r requirements.txt
+```
 
 ## Database Setup
 
