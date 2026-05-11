@@ -63,3 +63,11 @@ Database credentials are stored in a separate configuration file called `config.
 ### Option 6 – View Rooms
 - Displays room details
 - Uses room caching to match project specification requirements
+
+## Requirements
+
+Required Python packages are listed in `requirements.txt`.
+
+Install all dependencies using:
+
+pip install -r requirements.txt
