@@ -71,3 +71,13 @@ Required Python packages are listed in `requirements.txt`.
 Install all dependencies using:
 
 pip install -r requirements.txt
+
+## Database Setup
+
+Before running the application:
+
+1. Ensure MySQL is running
+2. Ensure Neo4j is running
+3. Import the provided databases:
+   - `appdbproj.sql` into MySQL
+   - `appdbprojNeo4j.json` into Neo4j
