@@ -58,7 +58,7 @@ def view_speakers_sessions():
                 print("----------------------------------------")
 
         else:
-            print("No speakers match search.")
+            print("No speakers found of that name.")
 
         input("\nPress Enter to return to menu...")
 
