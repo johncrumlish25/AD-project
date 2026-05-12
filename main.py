@@ -2,6 +2,10 @@ import mysql.connector
 from neo4j import GraphDatabase
 import config
 
+# ========================
+# Connections
+# ========================
+
 # MySQL Connection
 conn = mysql.connector.connect(
     host=config.MYSQL_HOST,
